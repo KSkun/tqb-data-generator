@@ -14,7 +14,7 @@ type Question struct {
 	Title       string             `json:"title" bson:"title"`
 	Desc        string             `json:"desc" bson:"desc"`
 	Statement   string             `json:"statement" bson:"statement"`
-	SubQuestion bson.M             `json:"sub_question" bson:"sub_question"`
+	SubQuestion []bson.M           `json:"sub_question" bson:"sub_question"`
 	Author      string             `json:"author" bson:"author"`
 	Audio       string             `json:"audio" bson:"audio"`
 	TimeLimit   int                `json:"time_limit" bson:"time_limit"`
