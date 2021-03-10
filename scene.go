@@ -42,10 +42,7 @@ func loadAllScene(path string, fileList []os.FileInfo) {
 
 func initSceneMap() {
 	sceneMap = make(map[string]Scene, 0)
-	println("[scene] working on scene 英语 1")
-	fileList, _ := ioutil.ReadDir("scene\\英语\\1")
-	loadAllScene("scene\\英语\\1", fileList)
-	println("[scene] working on scene 英语 2")
-	fileList, _ = ioutil.ReadDir("scene\\英语\\2")
-	loadAllScene("scene\\英语\\2", fileList)
+	println("[scene] working on scene 英语")
+	fileList, _ := ioutil.ReadDir("scene\\英语")
+	loadAllScene("scene\\英语", fileList)
 }

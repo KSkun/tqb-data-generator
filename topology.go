@@ -16,7 +16,8 @@ type Node struct {
 }
 
 var subjectMap = make(map[string]*Node, 0)
-var toFind = regexp.MustCompile("[0-9.]+")
+var regexScene = regexp.MustCompile("\\d+(\\.\\d+){1,2}")
+var regexNumber = regexp.MustCompile("\\d+")
 
 func nextXMindNode(node map[string]interface{}) []interface{} {
 	if _, found := node["children"]; !found {
@@ -32,14 +33,14 @@ func getTitleFromNode(node map[string]interface{}) string {
 func dfsXMindNode(node map[string]interface{}) *Node {
 	nowNode := Node{}
 	titleStr := getTitleFromNode(node)
-	allMatch := toFind.FindAllString(titleStr, -1)
+	allMatch := regexNumber.FindAllString(titleStr, -1)
 	nowNode.QuestionLabel = allMatch[0]
-	nowNode.SceneLabel = allMatch[2]
+	nowNode.SceneLabel = regexScene.FindString(titleStr[strings.Index(titleStr, "；")+1:])
 	nowNode.NextNode = make(map[string]*Node, 0)
 
 	childNodeTitle := getTitleFromNode(nextXMindNode(node)[0].(map[string]interface{}))
 	if strings.Contains(childNodeTitle, "End") { // 到达 Ending
-		sceneID := toFind.FindString(childNodeTitle)
+		sceneID := regexScene.FindString(childNodeTitle[strings.Index(childNodeTitle, "；")+1:])
 		sceneText := sceneMap[sceneID].Text
 		nextNode := nextXMindNode(node)[0] // Ending 节点
 		flagHasAS := false
@@ -61,7 +62,7 @@ func dfsXMindNode(node map[string]interface{}) *Node {
 			return &nowNode
 		}
 	} else if strings.Contains(childNodeTitle, "；") { // 选择页剧情
-		sceneID := toFind.FindString(childNodeTitle)
+		sceneID := regexScene.FindString(childNodeTitle[strings.Index(childNodeTitle, "；")+1:])
 		sceneText := sceneMap[sceneID].Text + "\\n\\n*" + childNodeTitle[0:strings.Index(childNodeTitle, "；")] + "*"
 		nowNode.NextNodeText = sceneText
 		node = nextXMindNode(node)[0].(map[string]interface{})
